@@ -370,17 +370,19 @@ private:
 				std::vector<DWideRowEdge>& row_data = dwide_row_data_[r];
 				for(int64_t c = 0; c < int64_t(row_data.size()); ++c) {
 					DWideRowEdge& edge = row_data[c];
-					int c = edge.c;
-					TwodVertex local = r * BLOCK_SIZE + edge.src_vertex;
-					LocalVertex reordred = reorder_map[local];
+					{
+						int c = edge.c;
+						TwodVertex local = r * BLOCK_SIZE + edge.src_vertex;
+						LocalVertex reordred = reorder_map[local];
 
-					int64_t wide_row_offset = local_wide_row_size() * c + (reordred >> LOG_EDGE_PART_SIZE);
-					counts[wide_row_offset]++;
+						int64_t wide_row_offset = local_wide_row_size() * c + (reordred >> LOG_EDGE_PART_SIZE);
+						counts[wide_row_offset]++;
 
-					BitmapType& bitmap_v = row_bitmap_[local_bitmap_size() * c + reordred / NBPE];
-					BitmapType add_mask = BitmapType(1) << (reordred % NBPE);
-					if((bitmap_v & add_mask) == 0) {
-						__sync_fetch_and_or(&bitmap_v, add_mask);
+						BitmapType& bitmap_v = row_bitmap_[local_bitmap_size() * c + reordred / NBPE];
+						BitmapType add_mask = BitmapType(1) << (reordred % NBPE);
+						if((bitmap_v & add_mask) == 0) {
+							__sync_fetch_and_or(&bitmap_v, add_mask);
+						}
 					}
 				}
 			}

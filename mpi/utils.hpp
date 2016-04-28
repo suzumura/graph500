@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 // for affinity setting //
 #include <unistd.h>
