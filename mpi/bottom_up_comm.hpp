@@ -206,7 +206,8 @@ protected:
 	virtual CommTargetBase& nodes(int target) { return nodes_[target]; }
 
 	int make_tag(BottomUpSubstepTag& tag) {
-		return (1 << 30) | (tag.route << 24) |
+		//return (1 << 30) | (tag.route << 24) |
+		return (tag.route << 24) |
 				(tag.routed_count << 12) | tag.region_id;
 	}
 
@@ -261,6 +262,7 @@ protected:
 				type, nodes_[0].rank, MPI_ANY_TAG, mpi_comm, &req[0]);
 		MPI_Irecv(recv_pair[recv_1].data, buffer_width,
 				type, nodes_[1].rank, MPI_ANY_TAG, mpi_comm, &req[1]);
+		print_with_prefix("bottom_up_comm.hpp : send_recv()");
 		MPI_Isend(send_pair[0].data, send_pair[0].tag.length,
 				type, nodes_[1].rank, make_tag(send_pair[0].tag), mpi_comm, &req[2]);
 		MPI_Isend(send_pair[1].data, send_pair[1].tag.length,
