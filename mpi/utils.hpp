@@ -891,7 +891,7 @@ inline int get_apic_id() {
 void initialize_core_id() {
 	my_apic_id = get_apic_id();
 }
-/*
+
 bool ensure_my_apic_id() {
 	int cur_id = get_apic_id();
 	if(my_apic_id != cur_id) {
@@ -899,7 +899,7 @@ bool ensure_my_apic_id() {
 	}
 	return false;
 }
-*/
+
 #else
 AffinityMode affinity_mode = USE_EXISTING_AFFINITY;
 void initialize_core_id() { }
