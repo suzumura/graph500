@@ -28,13 +28,17 @@
 
 // General Settings
 #define PRINT_WITH_TIME 1
+#ifndef VERVOSE_MODE
 #define VERVOSE_MODE 1
+#endif
 #define PROFILING_MODE 1
 #define REPORT_GEN_RPGRESS 0
 
 // General Optimizations
 // 0: completely off, 1: only reduce isolated vertices, 2: sort by degree and reduce isolated vertices
+#ifndef VERTEX_REORDERING
 #define VERTEX_REORDERING 0
+#endif
 // 0: put all edges to temporally buffer, 1: count first, 2: hybrid
 #define TOP_DOWN_SEND_LB 2
 #define TOP_DOWN_RECV_LB 1
