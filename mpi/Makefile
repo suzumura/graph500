@@ -6,7 +6,23 @@ SCOREP = false
 LDFLAGS := -fopenmp -g # -pg
 NVCCFLAGS := -Drestrict=__restrict__ -Xcompiler -fopenmp,-ffast-math,-Wall -arch=compute_20 -code=sm_20
 
-GCC_BASE := -fopenmp -g -Wall -Drestrict=__restrict__ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -ffast-math -msse4.2 # -pg
+VERBOSE = false
+VERTEX_REORDERING = 0
+REAL_BENCHMARK = false
+ifeq ($(VERBOSE), false)
+VERBOSE_OPT = -DVERVOSE_MODE=0
+else
+VERBOSE_OPT = -DVERVOSE_MODE=1
+endif
+VERTEX_REORDERING_OPT = -DVERTEX_REORDERING=$(VERTEX_REORDERING)
+ifeq ($(REAL_BENCHMARK), false)
+REAL_BENCHMARK_OPT =
+else
+REAL_BENCHMARK_OPT = -DREAL_BENCHMARK
+endif
+
+
+GCC_BASE := -fopenmp -g -Wall -Drestrict=__restrict__ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -ffast-math -msse4.2 $(VERBOSE_OPT) $(VERTEX_REORDERING_OPT) $(REAL_BENCHMARK_OPT) # -pg
 #GCC_BASE := -g -Wall -Drestrict=__restrict__ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -ffast-math -msse4.2 # -pg
 FCC_BASE := -Kopenmp -Xg -Drestrict=__restrict__ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -g #-Nquickdbg=heapchk # -Koptmsg=2
 #FCC_BASE := -Xg -g -Drestrict=__restrict__ -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS
@@ -122,10 +138,10 @@ all: cpu
 
 cpu: $(OBJS)
 	$(MPICPP) $(LDFLAGS) -o runnable $(OBJS) $(LIBS)
-	
+
 gpu: $(OBJS) $(CUOBJ)
 	$(MPICPP) $(LDFLAGS) -o runnable $(OBJS) $(CUOBJ) $(LIBS) $(CUDALIB)
-	
+
 gnu_func.o: gnu_func.cc
 	cp ../../$*.o_ $*.o
 #	g++ -c -g -O3 -Wall $< -o $*.o
@@ -134,17 +150,16 @@ gnu_func.o: gnu_func.cc
 
 .c.o:
 	$(MPICC) $(INC) -c $(CFLAGS) $< -o $*.o
-	
+
 .cpp.o:
 	$(MPICPP) $(INC) -c $(CPPFLAGS) $< -o $*.o
-	
+
 .cc.o:
 	$(MPICPP) $(INC) -c $(CPPFLAGS) $< -o $*.o
-	
+
 .cu.o:
 	$(NVCC) -c $(NVCCFLAGS) $< -o $*.o
-	
+
 .PHONY: clean
 clean:
 	-rm -f $(BINS) $(OBJS) $(CUOBJ)
-
