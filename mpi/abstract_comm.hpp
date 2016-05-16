@@ -345,8 +345,8 @@ public:
 		if(with_ptr) {
 			recv_proc_large_time_.submit("proc recv large data", level);
 		}
-		profiling::g_pis.submitCounter(last_send_size_, "a2a send data", level);
-		profiling::g_pis.submitCounter(last_recv_size_, "a2a recv data", level);
+		VERVOSE(profiling::g_pis.submitCounter(last_send_size_, "a2a send data", level);)
+		VERVOSE(profiling::g_pis.submitCounter(last_recv_size_, "a2a recv data", level);)
 	}
 #endif
 #if VERVOSE_MODE
@@ -796,4 +796,3 @@ void my_allgather_2d(T *sendbuf, int count, T *recvbuf, COMM_2D comm)
 #undef debug
 
 #endif /* ABSTRACT_COMM_HPP_ */
-
