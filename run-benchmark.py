@@ -78,6 +78,8 @@ benchArgs = ["mpirun", "-n", "1"]
 outFilePattern = "lP1"
 outFilePattern += "T" + str(options.numThreads)
 outFilePattern += "S" + str(options.numScale)
+outFilePattern += "VR" + str(options.vertexReordering)
+outFilePattern += "B" + str(options.bindMode)
 benchArgs.extend(["-outfile-pattern", outFilePattern])
 
 benchArgs.extend(["-genv", "OMP_NUM_THREADS", str(options.numThreads)])
