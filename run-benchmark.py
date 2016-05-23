@@ -14,6 +14,7 @@ parser.add_option("--vertex-reordering", action="store", dest="vertexReordering"
 parser.add_option("-b", "--bind-mode", action="store", dest="bindMode", type="choice", choices=["NONE", "TRUE", "SPREAD", "CLOSE"], default="NONE")
 parser.add_option("--test", action="store_true", dest="testMode", default=False)
 parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False)
+parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string")
 
 (options, args) = parser.parse_args()
 
@@ -82,7 +83,7 @@ while True:
     outFilePattern += "S" + str(options.numScale)
     outFilePattern += "VR" + str(options.vertexReordering)
     outFilePattern += "B" + str(options.bindMode)
-    benchArgs.extend(["-outfile-pattern", outFilePattern])
+    benchArgs.extend(["-outfile-pattern", options.logfileDestination + "/" + outFilePattern])
 
     benchArgs.extend(["-genv", "OMP_NUM_THREADS", str(options.numThreads)])
 
