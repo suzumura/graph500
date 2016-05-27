@@ -15,17 +15,19 @@ parser.add_option("-b", "--bind-mode", action="store", dest="bindMode", type="ch
 parser.add_option("--test", action="store_true", dest="testMode", default=False)
 parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False)
 parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string")
+parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False)
 
 (options, args) = parser.parse_args()
 
 # confirmation
 
-print("Number of Scale : " + str(options.numScale))
-print("Number of Threads : " + str(options.numThreads))
-print("Verbose Mode : " + str(options.verboseMode))
-print("Vertex Reordering Mode : " + str(options.vertexReordering))
-print("Thread Binding Mode : " + str(options.bindMode))
-print("Test Mode : " + str(options.testMode))
+if not options.printCommandMode:
+    print("Number of Scale : " + str(options.numScale))
+    print("Number of Threads : " + str(options.numThreads))
+    print("Verbose Mode : " + str(options.verboseMode))
+    print("Vertex Reordering Mode : " + str(options.vertexReordering))
+    print("Thread Binding Mode : " + str(options.bindMode))
+    print("Test Mode : " + str(options.testMode))
 
 
 # rebuild benchmark program
@@ -68,10 +70,16 @@ except IOError:
 
 ## rebuild if nesessary
 if not sameBuildOptions:
-    buildProc = subprocess.Popen(["make", "clean"], cwd="mpi")
-    buildProc.communicate()
-    buildProc = subprocess.Popen(buildArgs, cwd="mpi")
-    buildProc.communicate()
+    if options.printCommandMode:
+        print("cd mpi")
+        print("make clean")
+        print(" ".join(buildArgs))
+        print("cd ..")
+    else:
+        buildProc = subprocess.Popen(["make", "clean"], cwd="mpi")
+        buildProc.communicate()
+        buildProc = subprocess.Popen(buildArgs, cwd="mpi")
+        buildProc.communicate()
 
 
 # run benchmark
@@ -92,8 +100,12 @@ while True:
 
     benchArgs.extend(["./mpi/runnable", str(options.numScale)])
 
-    benchProc = subprocess.Popen(benchArgs)
-    benchProc.communicate()
+    if options.printCommandMode:
+        print(" ".join(benchArgs))
+        break
+    else:
+        benchProc = subprocess.Popen(benchArgs)
+        benchProc.communicate()
 
     if options.increasingScale and benchProc.returncode == 0:
         del benchProc
