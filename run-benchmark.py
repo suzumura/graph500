@@ -18,7 +18,28 @@ def generateLogFileName(options):
 
 # for OpenMPI
 def spawnOpenMPI(options):
-    return 0
+    benchArgs = ["mpirun", "-np", "1"]
+
+    outFilePattern = generateLogFileName(options)
+    benchArgs.extend(["-output-filename", options.logfileDestination + "/" + outFilePattern])
+
+    benchArgs.extend(["-x", "OMP_NUM_THREADS=" + str(options.numThreads)])
+
+    if options.bindMode != "NONE":
+        benchArgs.extend(["-x", "OMP_PROC_BIND=" + options.bindMode])
+
+    benchArgs.extend(["./mpi/runnable", str(options.numScale)])
+
+    returnCode = 0
+    if options.printCommandMode:
+        print(" ".join(benchArgs))
+    else:
+        benchProc = subprocess.Popen(benchArgs)
+        benchProc.communicate()
+        returnCode = benchProc.returncode
+        del benchProc
+
+    return returnCode
 
 # for MPICH/MVAPICH
 def spawnMPICH(options):
