@@ -18,7 +18,7 @@ def generateLogFileName(options):
 
 # for OpenMPI
 def spawnOpenMPI(options):
-    benchArgs = ["mpirun", "-np", "1"]
+    benchArgs = ["mpirun", "-np", "1", "-bind-to", "none"]
 
     outFilePattern = generateLogFileName(options)
     benchArgs.extend(["-output-filename", options.logfileDestination + "/" + outFilePattern])
