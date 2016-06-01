@@ -3,6 +3,48 @@
 from optparse import OptionParser
 import subprocess
 
+#####################################
+# mpirun command spawning functions
+#####################################
+
+# log file name generator
+def generateLogFileName(options):
+    outFilePattern = "lP1"
+    outFilePattern += "T" + str(options.numThreads)
+    outFilePattern += "S" + str(options.numScale)
+    outFilePattern += "VR" + str(options.vertexReordering)
+    outFilePattern += "B" + str(options.bindMode)
+    return outFilePattern
+
+# for OpenMPI
+def spawnOpenMPI(options):
+    return 0
+
+# for MPICH/MVAPICH
+def spawnMPICH(options):
+    benchArgs = ["mpirun", "-n", "1"]
+
+    outFilePattern = generateLogFileName(options)
+    benchArgs.extend(["-outfile-pattern", options.logfileDestination + "/" + outFilePattern])
+
+    benchArgs.extend(["-genv", "OMP_NUM_THREADS", str(options.numThreads)])
+
+    if options.bindMode != "NONE":
+        benchArgs.extend(["-genv", "OMP_PROC_BIND", options.bindMode])
+
+    benchArgs.extend(["./mpi/runnable", str(options.numScale)])
+
+    returnCode = 0
+    if options.printCommandMode:
+        print(" ".join(benchArgs))
+    else:
+        benchProc = subprocess.Popen(benchArgs)
+        benchProc.communicate()
+        returnCode = benchProc.returncode
+        del benchProc
+
+    return returnCode
+
 
 # parse command line arguments
 
@@ -16,6 +58,7 @@ parser.add_option("--test", action="store_true", dest="testMode", default=False)
 parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False)
 parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string")
 parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False)
+parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "MPICH", "MVAPICH"], default="MPICH")
 
 (options, args) = parser.parse_args()
 
@@ -81,35 +124,18 @@ if not sameBuildOptions:
         buildProc = subprocess.Popen(buildArgs, cwd="mpi")
         buildProc.communicate()
 
-
 # run benchmark
+commandFunction = None
+if options.mpiRuntime == "OpenMPI":
+    commandFunction = spawnOpenMPI
+elif options.mpiRuntime == "MPICH" or options.mpiRuntime == "MVAPICH":
+    commandFunction = spawnMPICH
+
 while True:
-    benchArgs = ["mpirun", "-n", "1"]
 
-    outFilePattern = "lP1"
-    outFilePattern += "T" + str(options.numThreads)
-    outFilePattern += "S" + str(options.numScale)
-    outFilePattern += "VR" + str(options.vertexReordering)
-    outFilePattern += "B" + str(options.bindMode)
-    benchArgs.extend(["-outfile-pattern", options.logfileDestination + "/" + outFilePattern])
-
-    benchArgs.extend(["-genv", "OMP_NUM_THREADS", str(options.numThreads)])
-
-    if options.bindMode != "NONE":
-        benchArgs.extend(["-genv", "OMP_PROC_BIND", options.bindMode])
-
-    benchArgs.extend(["./mpi/runnable", str(options.numScale)])
-
-    if options.printCommandMode:
-        print(" ".join(benchArgs))
-        break
-    else:
-        benchProc = subprocess.Popen(benchArgs)
-        benchProc.communicate()
-
-    if options.increasingScale and benchProc.returncode == 0:
-        del benchProc
+    returnCode = commandFunction(options)
+    if options.increasingScale and returnCode == 0 and not options.printCommandMode:
         options.numScale += 1
     else:
-        print("return code: " + str(benchProc.returncode))
+        print("return code: " + str(returnCode))
         break
