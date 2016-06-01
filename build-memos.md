@@ -2,10 +2,12 @@
 
 ### Libraries & Frameworks
 * OpenMP
+* libnuma
+* MPI runtime
+    * OpenMPI
+    * MPICH
+    * MVAPICH
 
 
 ### Environment
 * CPU supports SSE instruction
-* GPU that supports CUDA (= nVidia GPU)
-    * at least with Compute Capability 2.0
-*
