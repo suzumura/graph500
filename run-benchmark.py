@@ -41,6 +41,31 @@ def spawnOpenMPI(options):
 
     return returnCode
 
+# for OpenMPI (<= version 1.6.5)
+def spawnOpenMPIOld(options):
+    benchArgs = ["mpirun", "-np", "1", "-bind-to-none"]
+
+    outFilePattern = generateLogFileName(options)
+    benchArgs.extend(["-output-filename", options.logfileDestination + "/" + outFilePattern])
+
+    benchArgs.extend(["-x", "OMP_NUM_THREADS=" + str(options.numThreads)])
+
+    if options.bindMode != "NONE":
+        benchArgs.extend(["-x", "OMP_PROC_BIND=" + options.bindMode])
+
+    benchArgs.extend(["./mpi/runnable", str(options.numScale)])
+
+    returnCode = 0
+    if options.printCommandMode:
+        print(" ".join(benchArgs))
+    else:
+        benchProc = subprocess.Popen(benchArgs)
+        benchProc.communicate()
+        returnCode = benchProc.returncode
+        del benchProc
+
+    return returnCode
+
 # for MPICH/MVAPICH
 def spawnMPICH(options):
     benchArgs = ["mpirun", "-n", "1"]
@@ -79,7 +104,7 @@ parser.add_option("--test", action="store_true", dest="testMode", default=False)
 parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False)
 parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string")
 parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False)
-parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "MPICH", "MVAPICH"], default="MPICH")
+parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "OpenMPIOld", "MPICH", "MVAPICH"], default="MPICH")
 
 (options, args) = parser.parse_args()
 
@@ -149,6 +174,8 @@ if not sameBuildOptions:
 commandFunction = None
 if options.mpiRuntime == "OpenMPI":
     commandFunction = spawnOpenMPI
+elif options.mpiRuntime == "OpenMPIOld":
+    commandFunction = spawnOpenMPIOld
 elif options.mpiRuntime == "MPICH" or options.mpiRuntime == "MVAPICH":
     commandFunction = spawnMPICH
 
@@ -157,6 +184,7 @@ while True:
     returnCode = commandFunction(options)
     if options.increasingScale and returnCode == 0 and not options.printCommandMode:
         options.numScale += 1
+	print("continueing... scale : " + str(options.numScale))
     else:
         print("return code: " + str(returnCode))
         break
