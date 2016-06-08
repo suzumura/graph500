@@ -28,6 +28,9 @@ def spawnOpenMPI(options):
     if options.bindMode != "NONE":
         benchArgs.extend(["-x", "OMP_PROC_BIND=" + options.bindMode])
 
+    if options.hostfile != "":
+        benchArgs.extend(["-hostfile", options.hostfile])
+
     benchArgs.extend(["./mpi/runnable", str(options.numScale)])
 
     returnCode = 0
@@ -53,6 +56,9 @@ def spawnOpenMPIOld(options):
     if options.bindMode != "NONE":
         benchArgs.extend(["-x", "OMP_PROC_BIND=" + options.bindMode])
 
+    if options.hostfile != "":
+        benchArgs.extend(["-hostfile", options.hostfile])
+
     benchArgs.extend(["./mpi/runnable", str(options.numScale)])
 
     returnCode = 0
@@ -77,6 +83,9 @@ def spawnMPICH(options):
 
     if options.bindMode != "NONE":
         benchArgs.extend(["-genv", "OMP_PROC_BIND", options.bindMode])
+
+    if options.hostfile != "":
+        benchArgs.extend(["-hostfile", options.hostfile])
 
     benchArgs.extend(["./mpi/runnable", str(options.numScale)])
 
@@ -105,6 +114,7 @@ parser.add_option("--increasing-scale", action="store_true", dest="increasingSca
 parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string", help="set destination directory to store log files")
 parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False, help="only print commands for benchmarking (don't execute benchmarking)")
 parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "OpenMPIOld", "MPICH", "MVAPICH"], default="MPICH", help="select MPI runtime : OpenMPI, OpenMPIOld (for version less than 1.6.5), MPICH, MVAPICH")
+parser.add_option("--hostfile", action="store", dest="hostfile", default="", type="string", help="hostfile provided to mpirun")
 
 (options, args) = parser.parse_args()
 
