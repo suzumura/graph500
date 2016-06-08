@@ -95,16 +95,16 @@ def spawnMPICH(options):
 # parse command line arguments
 
 parser = OptionParser()
-parser.add_option("-t","--threads", action="store", dest="numThreads", default=4, type="int")
-parser.add_option("-s","--scale", action="store", dest="numScale", default=16, type="int")
-parser.add_option("-v","--verbose", action="store_true", dest="verboseMode", default=False)
-parser.add_option("--vertex-reordering", action="store", dest="vertexReordering", type="int", default=0)
-parser.add_option("-b", "--bind-mode", action="store", dest="bindMode", type="choice", choices=["NONE", "TRUE", "SPREAD", "CLOSE"], default="NONE")
-parser.add_option("--test", action="store_true", dest="testMode", default=False)
-parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False)
-parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string")
-parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False)
-parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "OpenMPIOld", "MPICH", "MVAPICH"], default="MPICH")
+parser.add_option("-t","--threads", action="store", dest="numThreads", default=4, type="int", help="number of threads")
+parser.add_option("-s","--scale", action="store", dest="numScale", default=16, type="int", help="number of scale (when you specified --increasing-scale, this is treated as initial scale)")
+parser.add_option("-v","--verbose", action="store_true", dest="verboseMode", default=False, help="enable verbose output in log")
+parser.add_option("--vertex-reordering", action="store", dest="vertexReordering", type="int", default=0, help="vertex reordering mode : 0 = none, 1 = remove isolated vertices, 2 = 1 + reorder vertices by degree")
+parser.add_option("-b", "--bind-mode", action="store", dest="bindMode", type="choice", choices=["NONE", "TRUE", "SPREAD", "CLOSE"], default="NONE", help="OpenMP process binding mode : NONE, TRUE, SPREAD, CLOSE (please search OMP_PROC_BIND for detail)")
+parser.add_option("--test", action="store_true", dest="testMode", default=False, help="enable test mode (set the number of BFS execution times to 16)")
+parser.add_option("--increasing-scale", action="store_true", dest="increasingScale", default=False, help="iterate benchmarking with increasing scale unless benchmarking process returns non-zero code")
+parser.add_option("--logfile-dest", action="store", dest="logfileDestination", default="./log", type="string", help="set destination directory to store log files")
+parser.add_option("--print-command", action="store_true", dest="printCommandMode", default=False, help="only print commands for benchmarking (don't execute benchmarking)")
+parser.add_option("-m", "--mpi-runtime", action="store", dest="mpiRuntime", type="choice", choices=["OpenMPI", "OpenMPIOld", "MPICH", "MVAPICH"], default="MPICH", help="select MPI runtime : OpenMPI, OpenMPIOld (for version less than 1.6.5), MPICH, MVAPICH")
 
 (options, args) = parser.parse_args()
 
