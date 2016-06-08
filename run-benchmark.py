@@ -184,7 +184,7 @@ while True:
     returnCode = commandFunction(options)
     if options.increasingScale and returnCode == 0 and not options.printCommandMode:
         options.numScale += 1
-	print("continueing... scale : " + str(options.numScale))
+        print("continueing... scale : " + str(options.numScale))
     else:
         print("return code: " + str(returnCode))
         break
