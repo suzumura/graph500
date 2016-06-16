@@ -93,3 +93,15 @@ python run-benchmark.py -h
 ### Tips
 
 * If you need to rebuild forcibly, remove file `prev_build_options`.
+
+
+
+
+## Appendix : Tested environment
+
+* OS : Ubuntu 14.04 LTS (64bit)
+* Linux kernel version : 3.13.0-88-generic
+* libnuma, mpich are installed via apt
+* CPU : Intel Core i7-2640
+* gcc version : 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3)
+* tested MPI runtime : MPICH 3.0.4
