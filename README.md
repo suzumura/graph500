@@ -4,9 +4,7 @@
 
 The license of the code is Apache License, Version 2.0. 
 
-Here is how you build and run our code. 
-
-# graph500 benchmarking tool
+Here is how you build and run our code. All the detailed technical information is described in the above our paper. 
 
 ## Build
 
