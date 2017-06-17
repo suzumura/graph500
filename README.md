@@ -1,3 +1,11 @@
+ Please cite the following paper if you use our code. 
+ 
+ Koji Ueno, Toyotaro Suzumura, Naoya Maruyama, Katsuki Fujisawa, Satoshi Matsuoka (2016-12-01). "Extreme scale breadth-first search on supercomputers". 2016 IEEE International Conference on Big Data (Big Data): 1040–1047. doi:10.1109/BigData.2016.7840705.
+
+The license of the code is Apache License, Version 2.0. 
+
+Here is how you build and run our code. 
+
 # graph500 benchmarking tool
 
 ## Build
