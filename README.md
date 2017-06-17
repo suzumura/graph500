@@ -44,7 +44,7 @@ mpirun -n 1 -outfile-pattern ./log/lP1T8S16VR0BNONE -genv OMP_NUM_THREADS 8 ./mp
 
 ## Available options
 
-### `runnable`
+### `Specifying number of threads and number of scales`
 ```sh
 # OpenMPI >= 1.8
 mpirun -np 1 -bind-to none -output-filename ./log/lP1T8S16VR0BNONE -x OMP_NUM_THREADS=<nthreads> ./runnable <nscale>
