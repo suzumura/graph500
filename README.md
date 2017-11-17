@@ -1,6 +1,9 @@
  Please cite the following paper if you use our code. 
  
- Koji Ueno, Toyotaro Suzumura, Naoya Maruyama, Katsuki Fujisawa, Satoshi Matsuoka (2016-12-01). "Extreme scale breadth-first search on supercomputers". 2016 IEEE International Conference on Big Data (Big Data): 1040–1047. doi:10.1109/BigData.2016.7840705.
+  Koji Ueno, Toyotaro Suzumura, Naoya Maruyama, Katsuki Fujisawa, Satoshi Matsuoka:
+Efficient Breadth-First Search on Massively Parallel and Distributed-Memory Machines. Data Science and Engineering 2(1): 22-35 (2017)
+
+  Koji Ueno, Toyotaro Suzumura, Naoya Maruyama, Katsuki Fujisawa, Satoshi Matsuoka (2016-12-01). "Extreme scale breadth-first search on supercomputers". 2016 IEEE International Conference on Big Data (Big Data): 1040–1047. doi:10.1109/BigData.2016.7840705.
 
 The license of the code is Apache License, Version 2.0. 
 
