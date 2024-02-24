@@ -13,6 +13,9 @@
 #include <stdlib.h>
 #include <malloc.h>
 
+#include <pthread.h>
+#include <time.h>
+
 // for affinity setting //
 #include <unistd.h>
 
